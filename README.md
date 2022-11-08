@@ -1,5 +1,5 @@
 ### Setup Steps
-python -m venv env
+python -m venv env <br>
 source env/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
