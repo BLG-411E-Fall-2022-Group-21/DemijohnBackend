@@ -124,7 +124,7 @@ STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-CSRF_TRUSTED_ORIGINS=['https://demijohnbackend.azurewebsites.net']
+#CSRF_TRUSTED_ORIGINS=['https://demijohnbackend.azurewebsites.net']
 ALLOWED_HOSTS = ['*']
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 NOSE_ARGS = ['--nocapture',
