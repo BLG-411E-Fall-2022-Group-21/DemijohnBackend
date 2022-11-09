@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import User
+from .models import User, PreviousOrder, Cart
 from .serializers import UserSerializer
 from rest_framework.decorators import api_view
 import hashlib
@@ -40,8 +40,12 @@ def get_previous_orders(request):
     username = request.data.get("username")
     password = request.data.get("password")
     if check_user(username) and check_password(username, password):
-        orders = User.objects.get(username=username).orders
-        return JsonResponse({"orders": orders}, status=200)
+        user_id = User.objects.get(username=username).id
+        orders = list(PreviousOrder.objects.filter(user_id=user_id).values())
+        for i in range(len(orders)):
+            orders[i].pop("user_id_id")
+            orders[i].pop("id")
+        return JsonResponse({"orders": orders}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
@@ -52,7 +56,16 @@ def get_cart(request):
     {orders:[{bottle:5, water_type:still}, {bottle:10, water_type:sparkling}]} else return HTTP 400
     else return HTTP 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user_id = User.objects.get(username=username).id
+        cart = list(Cart.objects.filter(user_id=user_id).values())
+        for i in range(len(cart)):
+            cart[i].pop("user_id_id")
+            cart[i].pop("id")
+        return JsonResponse({"orders": cart}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 @api_view(["GET"])
@@ -61,7 +74,12 @@ def get_user_address(request):
     check user request.data["username"] address. If user exists return HTTP 200 and user address
     else return HTTP 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        address = User.objects.get(username=username).address
+        return JsonResponse({"address": address}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 @api_view(["POST"])
@@ -70,7 +88,16 @@ def place_order(request):
     check user request.data["username"] cart. If user exists add items in the cart to previous orders and empty cart and return HTTP 200
     if user not exists return HTTP 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        cart = list(Cart.objects.filter(user_id=user.id).values())
+        Cart.objects.filter(user_id=user.id).delete()
+        for i in range(len(cart)):
+            PreviousOrder.objects.create(user_id=user, bottle=cart[i]["bottle"], water_type=cart[i]["water_type"])
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 @api_view(["POST"])
@@ -79,8 +106,28 @@ def change_address(request):
     check user request.data["username"] address. if user exisst change address  to request.data["new_address"] and return http 200
     if user not exists return http 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        user.address = request.data.get("new_address")
+        user.save()
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
+
+@api_view(["GET"])
+def get_recurring_order_period(request):
+    """
+    check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
+    else return HTTP 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        period = User.objects.get(username=username).recurring_order
+        return JsonResponse({"period": period}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 @api_view(["POST"])
 def change_recurring_order_period(request):
@@ -88,8 +135,28 @@ def change_recurring_order_period(request):
     check user request.data["username"] username. if user exists change reccuring order to request.data["new_period"] and return http 200
     if user not exists return http 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        user.recurring_order = request.data.get("new_period")
+        user.save()
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
+
+@api_view(["GET"])
+def get_recurring_order_bottle(request):
+    """
+    check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
+    else return HTTP 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        bottle = User.objects.get(username=username).recurring_order_bottle
+        return JsonResponse({"bottle": bottle}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 @api_view(["POST"])
 def change_recurring_order_bottle(request):
@@ -97,7 +164,14 @@ def change_recurring_order_bottle(request):
     check user request.data["username"] username. if user exists change reccuring order to request.data["new_bottle"] and return http 200
     if user not exists return http 400
     """
-    pass
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        user.recurring_order = request.data.get("new_bottle")
+        user.save()
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 @api_view(["POST"])
@@ -107,9 +181,17 @@ def add_item_to_cart(request):
     to the user's cart and return http 200
     if user not exists return http 400
     """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        item = Cart.objects.create(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type"))
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 def check_user(username) -> bool:
+    print(username)
     if username is None:
         return False
     user = User.objects.filter(username=username).count()

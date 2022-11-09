@@ -4,10 +4,6 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
-    previous_orders = models.ForeignKey(
-        "PreviousOrder", on_delete=models.CASCADE, null=True
-    )
-    cart = models.ForeignKey("Cart", on_delete=models.CASCADE, null=True)
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
     address = models.CharField(max_length=50, default="")
@@ -27,17 +23,19 @@ class User(AbstractUser):
 
 class Cart(models.Model):
     id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default=-1)
     bottle = models.IntegerField()  # 5 10 15 30L
     water_type = models.CharField(max_length=50)  # still, sparkling
 
     def __str__(self) -> str:
-        return f"User {self.id}: {self.bottle}L {self.water_type}"
+        return f"User {self.user_id}: {self.bottle}L {self.water_type}"
 
 
 class PreviousOrder(models.Model):
     id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default=-1)
     bottle = models.IntegerField()  # 5 10 15 30L
     water_type = models.CharField(max_length=50)  # still, sparkling
 
     def __str__(self) -> str:
-        return f"User {self.id}: {self.bottle}L {self.water_type}"
+        return f"User {self.user_id}: {self.bottle}L {self.water_type}"
