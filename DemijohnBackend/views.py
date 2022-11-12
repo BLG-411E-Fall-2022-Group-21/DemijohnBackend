@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import User, PreviousOrder, Cart
 from .serializers import UserSerializer
 from rest_framework.decorators import api_view
@@ -202,8 +201,8 @@ def remove_item_from_cart(request):
     password = request.data.get("password")
     if check_user(username) and check_password(username, password):
         user = User.objects.get(username=username)
-        if check_item(user, request.data.get("bottle"), request.data.get("type")):
-            item = Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")).delete()
+        if Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")):
+            item = Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")).first().delete()
             return JsonResponse({"message": "success"}, status=200, safe=False)
         return JsonResponse({"message": "Item not in cart."}, status=400)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
@@ -227,12 +226,3 @@ def check_password(username, password) -> bool:
     if user > 0:
         return True
     return False
-
-def check_item(user, bottle, type) -> bool:
-    try:
-        Cart.objects.get(user_id=user, bottle=bottle, water_type=type)
-        return True
-    except MultipleObjectsReturned:
-        return True
-    except ObjectDoesNotExist:
-        return False
