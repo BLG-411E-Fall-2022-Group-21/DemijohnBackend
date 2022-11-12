@@ -189,6 +189,23 @@ def add_item_to_cart(request):
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
+@api_view(["POST"])
+def remove_item_from_cart(request):
+    """
+    check user request.data["username"] username and request.data["item"]. if user exists and item in cart remove item 
+    from the user's cart and return http 200
+    if user does not exist or item not in cart return http 400
+    (request.data["item"] will be like {"bottle":"15","type":"still"})
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password) and \
+        Cart.objects.exists(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")):
+        user = User.objects.get(username=username)
+        item = Cart.objects.delete(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type"))
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password, or item not in cart."}, status=400)
+
 
 def check_user(username) -> bool:
     print(username)
