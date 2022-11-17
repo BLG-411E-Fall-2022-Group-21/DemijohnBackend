@@ -32,5 +32,7 @@ urlpatterns = [
     path("remove_item_from_cart/", views.remove_item_from_cart),
     path("get_recurring_order_period/", views.get_recurring_order_period),
     path("get_recurring_order_bottle/", views.get_recurring_order_bottle),
-    
+    path("get_recurring_order_type/", views.get_recurring_order_type),
+    path("change_recurring_order_type/", views.change_recurring_order_type),
+    path("cancel_recurring_order/", views.cancel_recurring_order)
 ]
