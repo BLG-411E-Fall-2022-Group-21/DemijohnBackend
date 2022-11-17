@@ -30,7 +30,7 @@ def login(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_previous_orders(request):
     """
     check user request.data["username"] previous orders. If user exists return HTTP 200 and previous orders
@@ -49,7 +49,7 @@ def get_previous_orders(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_cart(request):
     """
     check user request.data["username"] cart. If user exists return HTTP 200 and previous orders
@@ -68,7 +68,7 @@ def get_cart(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_user_address(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user address
@@ -116,7 +116,7 @@ def change_address(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_recurring_order_period(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
@@ -144,8 +144,35 @@ def change_recurring_order_period(request):
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
+@api_view(["POST"])
+def get_recurring_order_type(request):
+    """
+    check user request.data["username"] address. If user exists return HTTP 200 and user recurring order type
+    else return HTTP 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        type = User.objects.get(username=username).recurring_order_type
+        return JsonResponse({"type": type}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
-@api_view(["GET"])
+@api_view(["POST"])
+def change_recurring_order_type(request):
+    """
+    check user request.data["username"] username. if user exists change reccuring order type to request.data["new_type"] and return http 200
+    if user not exists return http 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        user.recurring_order_type = request.data.get("new_type")
+        user.save()
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
+
+@api_view(["POST"])
 def get_recurring_order_bottle(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
@@ -168,11 +195,27 @@ def change_recurring_order_bottle(request):
     password = request.data.get("password")
     if check_user(username) and check_password(username, password):
         user = User.objects.get(username=username)
-        user.recurring_order = request.data.get("new_bottle")
+        user.recurring_order_bottle = request.data.get("new_bottle")
         user.save()
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
+@api_view(["POST"])
+def cancel_recurring_order(request):
+    """
+    check user request.data["username"] username. if user exists cancel reccuring order and return http 200
+    if user not exists return http 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        user.recurring_order = 0
+        user.recurring_order_type = ""
+        user.recurring_order_bottle = 0
+        user.save()
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 @api_view(["POST"])
 def add_item_to_cart(request):
