@@ -30,7 +30,7 @@ def login(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_previous_orders(request):
     """
     check user request.data["username"] previous orders. If user exists return HTTP 200 and previous orders
@@ -49,7 +49,7 @@ def get_previous_orders(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_cart(request):
     """
     check user request.data["username"] cart. If user exists return HTTP 200 and previous orders
@@ -68,7 +68,7 @@ def get_cart(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_user_address(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user address
@@ -116,7 +116,7 @@ def change_address(request):
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_recurring_order_period(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
@@ -144,7 +144,7 @@ def change_recurring_order_period(request):
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_recurring_order_type(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user recurring order type
@@ -172,7 +172,7 @@ def change_recurring_order_type(request):
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_recurring_order_bottle(request):
     """
     check user request.data["username"] address. If user exists return HTTP 200 and user recurring order period
