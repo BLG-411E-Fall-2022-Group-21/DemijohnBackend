@@ -5,6 +5,7 @@ import hashlib
 
 data = {"username": "test", "password": "test"}
 
+ 
 class SignupTestCase(APITestCase):
     def test_signup(self):
         data = {"username": "test", "password": "test"}

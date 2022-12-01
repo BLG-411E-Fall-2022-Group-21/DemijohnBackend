@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_nose",
 ]
 
 MIDDLEWARE = [
@@ -128,4 +129,10 @@ STATIC_URL = "static/"
 ALLOWED_HOSTS = ['*']
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 NOSE_ARGS = ['--nocapture',
-             '--nologcapture',]
+             '--nologcapture',
+             '--with-coverage',
+             '--cover-html',
+            '--cover-package=DemijohnBackend',
+            '--verbosity=2']
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
