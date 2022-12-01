@@ -1,5 +1,6 @@
 .vscode/
 env/
+django_venv/
 /Include
 /Lib
 /Scripts
