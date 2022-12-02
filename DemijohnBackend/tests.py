@@ -22,6 +22,11 @@ class Login(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(User.objects.get().username, "test")
 
+class GetPreviousOrders(APITestCase):
+    pass
+
+
+
 #TODO: test get_previous_orders
 # class GetPreviousOrders(APITestCase):
 #     def test_get_previous_orders(self):
