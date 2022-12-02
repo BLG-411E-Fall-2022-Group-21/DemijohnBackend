@@ -12,6 +12,8 @@ def signup(request):
     user = User.objects.filter(username=username).count()
     if user > 0:
         return JsonResponse({"message": "Username already exists."}, status=400)
+    if request.data.get("password") == "":
+        return JsonResponse({"message": "Password is invalid."}, status=400)
     hashed_password = hashlib.md5(request.data.get("password").encode()).hexdigest()
     User.objects.create(username=username, password=hashed_password)
     return JsonResponse({"user": username}, status=201)
