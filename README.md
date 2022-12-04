@@ -5,8 +5,13 @@ pip install -r requirements.txt <br>
 python manage.py migrate <br>
 python manage.py runserver <br>
 <br>
-## Run server
+
+### Run server
 source env/bin/activate <br>
 python manage.py makemigrations <br>
 python manage.py migrate <br>
 python manage.py runserver <br>
+
+
+### Run Tests
+python manage.py test
