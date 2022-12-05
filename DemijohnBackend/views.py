@@ -7,12 +7,14 @@ import hashlib
 
 @api_view(["POST"])
 def signup(request):
-    print(request.data)
+    #print(request.data)
     username: str = request.data.get("username")
     user = User.objects.filter(username=username).count()
+    if username is None:
+        return JsonResponse({"message": "Invalid username."}, status=400)
     if user > 0:
         return JsonResponse({"message": "Username already exists."}, status=400)
-    if request.data.get("password") == "":
+    if request.data.get("password") == '':
         return JsonResponse({"message": "Password is invalid."}, status=400)
     hashed_password = hashlib.md5(request.data.get("password").encode()).hexdigest()
     User.objects.create(username=username, password=hashed_password)
@@ -29,6 +31,39 @@ def login(request):
     password = request.data.get("password")
     if check_user(username) and check_password(username, password):
         return JsonResponse({"user": username}, status=200)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
+
+@api_view(["POST"])
+def add_item_to_cart(request):
+    """
+    check user request.data["username"] username. if user exists add item (request.data["item"] will be like {"bottle":"15","type":"still"})
+    to the user's cart and return http 200
+    if user not exists return http 400
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        item = Cart.objects.create(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type"))
+        return JsonResponse({"message": "success"}, status=200, safe=False)
+    return JsonResponse({"message": "Invalid username or password."}, status=400)
+
+@api_view(["POST"])
+def remove_item_from_cart(request):
+    """
+    check user request.data["username"] username and request.data["item"]. if user exists and item in cart remove item 
+    from the user's cart and return http 200
+    if user does not exist or item not in cart return http 400
+    (request.data will be like {"username":"test", "password":"test", "bottle":"15","type":"still"})
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if check_user(username) and check_password(username, password):
+        user = User.objects.get(username=username)
+        if Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")):
+            item = Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")).first().delete()
+            return JsonResponse({"message": "success"}, status=200, safe=False)
+        return JsonResponse({"message": "Item not in cart."}, status=400)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
@@ -219,42 +254,10 @@ def cancel_recurring_order(request):
         return JsonResponse({"message": "success"}, status=200, safe=False)
     return JsonResponse({"message": "Invalid username or password."}, status=400)
 
-@api_view(["POST"])
-def add_item_to_cart(request):
-    """
-    check user request.data["username"] username. if user exists add item (request.data["item"] will be like {"bottle":"15","type":"still"})
-    to the user's cart and return http 200
-    if user not exists return http 400
-    """
-    username = request.data.get("username")
-    password = request.data.get("password")
-    if check_user(username) and check_password(username, password):
-        user = User.objects.get(username=username)
-        item = Cart.objects.create(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type"))
-        return JsonResponse({"message": "success"}, status=200, safe=False)
-    return JsonResponse({"message": "Invalid username or password."}, status=400)
-
-@api_view(["POST"])
-def remove_item_from_cart(request):
-    """
-    check user request.data["username"] username and request.data["item"]. if user exists and item in cart remove item 
-    from the user's cart and return http 200
-    if user does not exist or item not in cart return http 400
-    (request.data will be like {"username":"test", "password":"test", "bottle":"15","type":"still"})
-    """
-    username = request.data.get("username")
-    password = request.data.get("password")
-    if check_user(username) and check_password(username, password):
-        user = User.objects.get(username=username)
-        if Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")):
-            item = Cart.objects.filter(user_id=user, bottle=request.data.get("bottle"), water_type=request.data.get("type")).first().delete()
-            return JsonResponse({"message": "success"}, status=200, safe=False)
-        return JsonResponse({"message": "Item not in cart."}, status=400)
-    return JsonResponse({"message": "Invalid username or password."}, status=400)
 
 
 def check_user(username) -> bool:
-    print(username)
+    #print(username)
     if username is None:
         return False
     user = User.objects.filter(username=username).count()
