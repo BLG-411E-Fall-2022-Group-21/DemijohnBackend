@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fa7a15-ced3-4fe8-9dd0-a5afded7f27a" name="Changes" comment="covarage doc added">
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DemijohnBackend/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/DemijohnBackend/tests.py" afterDir="false" />
+    <list default="true" id="b4fa7a15-ced3-4fe8-9dd0-a5afded7f27a" name="Changes" comment="README.md updated">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DemijohnBackend/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/DemijohnBackend/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

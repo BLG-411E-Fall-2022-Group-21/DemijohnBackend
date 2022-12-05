@@ -7,7 +7,7 @@ import hashlib
 
 @api_view(["POST"])
 def signup(request):
-    #print(request.data)
+
     username: str = request.data.get("username")
     user = User.objects.filter(username=username).count()
     if username is None:
@@ -257,7 +257,7 @@ def cancel_recurring_order(request):
 
 
 def check_user(username) -> bool:
-    #print(username)
+
     if username is None:
         return False
     user = User.objects.filter(username=username).count()
