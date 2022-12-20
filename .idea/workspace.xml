@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fa7a15-ced3-4fe8-9dd0-a5afded7f27a" name="Changes" comment="README.md updated">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DemijohnBackend/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/DemijohnBackend/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="b4fa7a15-ced3-4fe8-9dd0-a5afded7f27a" name="Changes" comment="tests updated" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,7 +22,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2INFmB5q1aRmks1IVBeSoD0g5xM" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
